@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Sign Recognition</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 60px auto;
+            text-align: center;
+            background: #f5f5f5;
+        }
+        h1 { color: #333; }
+        .upload-box {
+            border: 2px dashed #aaa;
+            padding: 40px;
+            border-radius: 12px;
+            background: white;
+            margin-top: 30px;
+        }
+        input[type="file"] { margin: 20px 0; }
+        button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover { background: #c0392b; }
+    </style>
+</head>
+<body>
+    <h1>🚦 Traffic Sign Recognition</h1>
+    <p>Upload an image of a German traffic sign to identify it.</p>
+
+    <div class="upload-box">
+        <form action="/predict" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".png,.jpg,.jpeg,.ppm" required>
+            <br>
+            <button type="submit">Identify Sign</button>
+        </form>
+    </div>
+</body>
+</html>
