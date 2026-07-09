@@ -1,48 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Traffic Sign Recognition</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 60px auto;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            background: #1a1a2e;
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #e74c3c;
+        }
+
+        nav h1 {
+            color: white;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        nav span {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .hero {
             text-align: center;
-            background: #f5f5f5;
+            padding: 60px 20px 30px;
+            color: #1a1a2e;
         }
-        h1 { color: #333; }
+
+        .hero h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .hero h2 span {
+            color: #e74c3c;
+        }
+
+        .hero p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .upload-container {
+            max-width: 520px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
         .upload-box {
-            border: 2px dashed #aaa;
-            padding: 40px;
-            border-radius: 12px;
-            background: white;
-            margin-top: 30px;
+            background: #ffffff;
+            border: 2px dashed #e74c3c;
+            border-radius: 16px;
+            padding: 50px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
-        input[type="file"] { margin: 20px 0; }
-        button {
+
+        .upload-box:hover {
+            background: #fff5f5;
+            border-color: #c0392b;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .upload-box p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .upload-box input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            background: #f0f2f5;
+            color: #1a1a2e;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 16px;
+            font-size: 14px;
+            transition: background 0.2s;
+            border: 1px solid #ddd;
+        }
+
+        .file-label:hover {
+            background: #e9ecef;
+        }
+
+        #file-name {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-bottom: 20px;
+            min-height: 20px;
+        }
+
+        .btn {
             background: #e74c3c;
             color: white;
             border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
+            padding: 14px 40px;
+            border-radius: 10px;
             font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
         }
-        button:hover { background: #c0392b; }
+
+        .btn:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 40px 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            min-width: 120px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #e74c3c;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 13px;
+        }
     </style>
 </head>
-<body>
-    <h1>🚦 Traffic Sign Recognition</h1>
-    <p>Upload an image of a German traffic sign to identify it.</p>
 
-    <div class="upload-box">
+<body>
+    <nav>
+        <span>🚦</span>
+        <h1>Traffic Sign Recognition</h1>
+    </nav>
+
+    <div class="hero">
+        <h2>Identify <span>Traffic Signs</span> Instantly</h2>
+        <p>Upload an image and our AI model will classify it in seconds</p>
+    </div>
+
+    <div class="upload-container">
         <form action="/predict" method="POST" enctype="multipart/form-data">
-            <input type="file" name="file" accept=".png,.jpg,.jpeg,.ppm" required>
-            <br>
-            <button type="submit">Identify Sign</button>
+            <div class="upload-box">
+                <div class="upload-icon">📷</div>
+                <p>Drag & drop or choose a traffic sign image</p>
+
+                <label class="file-label" for="file-input">Choose Image</label>
+                <input type="file" id="file-input" name="file" accept=".png,.jpg,.jpeg,.ppm" required
+                    onchange="updateFileName(this)">
+
+                <div id="file-name">No file selected</div>
+
+                <button type="submit" class="btn">🔍 Identify Sign</button>
+            </div>
         </form>
     </div>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-number">43</div>
+            <div class="stat-label">Sign Classes</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">98.6%</div>
+            <div class="stat-label">Validation Accuracy</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">39K+</div>
+            <div class="stat-label">Training Images</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">EfficientNetB0</div>
+            <div class="stat-label">Model Architecture</div>
+        </div>
+    </div>
+
+    <footer>
+        Built with EfficientNetB0 · GTSRB Dataset · Flask
+    </footer>
+
+    <script>
+        function updateFileName(input) {
+            const label = document.getElementById('file-name');
+            label.textContent = input.files[0]
+                ? input.files[0].name
+                : 'No file selected';
+        }
+    </script>
 </body>
+
 </html>

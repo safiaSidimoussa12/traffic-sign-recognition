@@ -3,87 +3,226 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prediction Result</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 60px auto;
-            text-align: center;
-            background: #f5f5f5;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        .result-box {
-            background: white;
-            border-radius: 12px;
+        nav {
+            background: #1a1a2e;
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #e74c3c;
+        }
+
+        nav h1 {
+            color: white;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        nav span {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .container {
+            max-width: 580px;
+            margin: 40px auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        .result-card {
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .image-section {
+            background: #f8f9fa;
             padding: 30px;
-            margin-top: 20px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
         }
 
-        img {
-            max-width: 200px;
-            border-radius: 8px;
+        .image-section img {
+            max-width: 180px;
+            max-height: 180px;
+            border-radius: 12px;
+            object-fit: contain;
+        }
+
+        .predictions-section {
+            padding: 24px;
+        }
+
+        .predictions-section h2 {
+            color: #1a1a2e;
+            font-size: 18px;
             margin-bottom: 20px;
+            text-align: center;
         }
 
         .prediction {
-            background: #f9f9f9;
-            border-left: 4px solid #e74c3c;
-            padding: 12px;
-            margin: 10px 0;
-            text-align: left;
-            border-radius: 4px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #e9ecef;
         }
 
-        .top-prediction {
+        .prediction.top {
             border-left-color: #27ae60;
             background: #eafaf1;
         }
 
-        .confidence-bar {
-            background: #ddd;
-            border-radius: 4px;
-            height: 8px;
-            margin-top: 6px;
+        .prediction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
 
-        .confidence-fill {
+        .prediction-name {
+            color: #1a1a2e;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .prediction.top .prediction-name {
+            color: #1e8449;
+        }
+
+        .confidence-text {
+            color: #666;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .prediction.top .confidence-text {
+            color: #27ae60;
+        }
+
+        .bar-bg {
+            background: #e9ecef;
+            border-radius: 6px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 8px;
+            border-radius: 6px;
             background: #e74c3c;
-            height: 8px;
-            border-radius: 4px;
-            display: block;
+            width: 0%;
+            transition: width 1s ease;
         }
 
-        a {
+        .prediction.top .bar-fill {
+            background: #27ae60;
+        }
+
+        .top-badge {
             display: inline-block;
+            background: #27ae60;
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            display: block;
+            text-align: center;
             margin-top: 20px;
-            color: #e74c3c;
+            padding: 14px;
+            background: #e74c3c;
+            color: white;
             text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #c0392b;
+        }
+
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 13px;
         }
     </style>
 </head>
 
 <body>
-    <h1>🚦 Prediction Result</h1>
+    <nav>
+        <span>🚦</span>
+        <h1>Traffic Sign Recognition</h1>
+    </nav>
 
-    <div class="result-box">
-        <img src="{{ '/' + image_path }}" alt="Uploaded sign">
+    <div class="container">
+        <div class="result-card">
+            <div class="image-section">
+                <img src="{{ '/' + image_path }}" alt="Uploaded sign">
+            </div>
 
-        <h2>Top 3 Predictions</h2>
+            <div class="predictions-section">
+                <h2>🔍 Top 3 Predictions</h2>
 
-        {% for pred in predictions %}
-        <div class="prediction {{ 'top-prediction' if loop.first else '' }}">
-            <strong>{{ pred.class_name }}</strong>
-            <br>
-            <small>Confidence: {{ "%.1f"|format(pred.confidence) }}%</small>
-            <div class="confidence-bar">
-                <div class="confidence-fill" style="width: {{ pred.confidence }}%"></div>
+                {% for pred in predictions %}
+                <div class="prediction {{ 'top' if loop.first else '' }}">
+                    <div class="prediction-header">
+                        <span class="prediction-name">
+                            {{ pred.class_name }}
+                            {% if loop.first %}
+                            <span class="top-badge">TOP</span>
+                            {% endif %}
+                        </span>
+                        <span class="confidence-text">{{ "%.1f"|format(pred.confidence) }}%</span>
+                    </div>
+                    <div class="bar-bg">
+                        <div class="bar-fill" data-width="{{ pred.confidence }}"></div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
         </div>
-        {% endfor %}
 
-        <a href="/">← Try another image</a>
+        <a href="/" class="back-btn">← Try Another Image</a>
     </div>
+
+    <footer>
+        Built with EfficientNetB0 · GTSRB Dataset · Flask
+    </footer>
+
+    <script>
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.bar-fill').forEach(bar => {
+                bar.style.width = bar.dataset.width + '%';
+            });
+        });
+    </script>
 </body>
 
 </html>
