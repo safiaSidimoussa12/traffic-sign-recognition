@@ -16,16 +16,19 @@ A web application that classifies German traffic signs using deep learning.
 
 ## Project Structure
 
+```
 traffic-sign-app/
 ├── app.py
+├── requirements.txt
+├── README.md
 ├── templates/
 │   ├── index.html
 │   └── result.html
 ├── static/
 │   └── uploads/
-├── model/          ← place your .keras file here
-├── requirements.txt
-└── README.md
+└── model/
+    └── efficientnet_finetuned_final.keras
+```
 
 ## Setup
 
